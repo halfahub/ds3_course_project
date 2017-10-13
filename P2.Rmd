@@ -1,0 +1,125 @@
+---
+title: "Project 2"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+
+if (!require(data.table)){
+  install.packages("data.table")
+}
+
+```
+
+### Loading Data
+
+Download and unpack files 
+
+```{r data, cache = TRUE}
+if (!file.exists("./tmp")) {
+  dir.create("./tmp")
+}
+
+download.file("https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip", destfile = "./tmp/dataset.zip")
+
+unzip("./tmp/dataset.zip",exdir = ".")
+```
+
+Observing unpacked directories
+
+```{r}
+dir("./UCI HAR Dataset")
+dir("./UCI HAR Dataset/test")
+dir("./UCI HAR Dataset/train")
+```
+
+### 1. Merging the training and the test sets to create one data set.
+
+Observe datasets
+```{r}
+features <- fread("./UCI HAR Dataset/features.txt",sep = " ",header = FALSE, col.names = c("feature_id","feature"), stringsAsFactors = FALSE,encoding = "UTF-8")
+dim(features) 
+str(features)
+
+activity_labels <- fread("./UCI HAR Dataset/activity_labels.txt", col.names = c("activity_id","activity_name"), stringsAsFactors = FALSE,encoding = "UTF-8")
+dim(activity_labels) 
+str(activity_labels)
+
+```
+
+Load and skim Train data
+```{r}
+x_train <- fread("./UCI HAR Dataset/train/X_train.txt", col.names = features$feature)
+dim(x_train) 
+str(x_train)
+
+activity_labels <- fread("./UCI HAR Dataset/activity_labels.txt")
+names(activity_labels) <- c("activity_id","activity_name")
+
+y_train <- fread("./UCI HAR Dataset/train/y_train.txt")
+names(y_train)[1] <- "activity_id"
+dim(y_train) 
+str(y_train)
+```
+
+Add Activities dimension 
+```{r}
+y_train$activity_factor <- factor(y_train$activity_id, levels=activity_labels$activity_id, labels = activity_labels$activity_name )
+str(y_train)
+
+if (dim(x_train)[1] == dim(y_train)[1]) {
+  train_data <- cbind(y_train[,2],x_train)
+  dim(train_data)
+}
+```
+
+Load and observe Test data
+```{r}
+x_test<- fread("./UCI HAR Dataset/test/X_test.txt", col.names = features$feature)
+dim(x_test) 
+str(x_test)
+
+
+y_test <- fread("./UCI HAR Dataset/test/y_test.txt")
+names(y_test)[1] <- "activity_id"
+
+y_test$activity_factor <- factor(y_test$activity_id, levels=activity_labels$activity_id, labels = activity_labels$activity_name )
+str(y_test)
+
+if (dim(x_test)[1] == dim(y_test)[1]) {
+  test_data <- cbind(y_test[,2],x_test)
+  dim(test_data)
+}
+
+```
+
+Merge Training and Test datasets in one
+```{r}
+if (dim(test_data)[2] == dim(train_data)[2]) {
+  all_data <- rbind(train_data,test_data)
+  dim(all_data)
+}
+```
+
+### 2. Extracting only the measurements on the mean and standard deviation for each measurement.
+```{r}
+
+mean_std_data <- all_data[,grepl("std|mean",as.character(features$feature))]
+
+```
+
+### 3. Setting descriptive activity names to name the activities in the data set.
+```{r}
+
+```
+
+### 4. Appropriately labeling the data set with descriptive variable names.
+```{r}
+
+```
+
+### 5. From the data set in step 4, creating a second, independent tidy data set with the average of each variable for each activity and each subject.
+```{r}
+
+```

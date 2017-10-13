@@ -103,10 +103,20 @@ if (dim(test_data)[2] == dim(train_data)[2]) {
 ```
 
 ### 2. Extracting only the measurements on the mean and standard deviation for each measurement.
+
+Using the RegExp filter *features* dataset, containing features list
 ```{r}
 
-mean_std_data <- all_data[,grepl("std|mean",as.character(features$feature))]
+mean_std_cols <- grepl("std|mean",as.character(features$feature))
+```
 
+Remember that features was augmented by activity in 1st column, so include one mo TRUE value for it in the resulting logical vector/
+```{r}
+mean_std_cols <- c(TRUE,mean_std_cols)
+mean_std_data <- all_data[,..mean_std_cols]
+
+dim(mean_std_data)
+str(mean_std_data)
 ```
 
 ### 3. Setting descriptive activity names to name the activities in the data set.

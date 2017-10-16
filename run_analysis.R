@@ -124,6 +124,6 @@ names(averaged_by_activity) <- gsub("meanFreq\\(\\)", "Mean_Freq", names(average
 names(averaged_by_activity)[-1] <- paste("Avg", names(averaged_by_activity)[-1], sep = "_")
 names(averaged_by_activity)[1] <- "Activity"
 
-write.table(averaged_by_activity, "./data/averaged_by_activity.txt")
+write.table(averaged_by_activity, "./data/averaged_by_activity.txt",row.name=FALSE)
 
 setwd("..")

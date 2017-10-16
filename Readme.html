@@ -140,9 +140,8 @@ unzip(&quot;./tmp/dataset.zip&quot;, exdir = &quot;.&quot;
 )</code></pre>
 <p>Observing unpacked directories</p>
 <pre class="r"><code>dir(&quot;./UCI HAR Dataset&quot;)</code></pre>
-<pre><code>## [1] &quot;activity_labels.txt&quot; &quot;data&quot;                &quot;features.txt&quot;       
-## [4] &quot;features_info.txt&quot;   &quot;README.txt&quot;          &quot;test&quot;               
-## [7] &quot;train&quot;</code></pre>
+<pre><code>## [1] &quot;activity_labels.txt&quot; &quot;features.txt&quot;        &quot;features_info.txt&quot;  
+## [4] &quot;README.txt&quot;          &quot;test&quot;                &quot;train&quot;</code></pre>
 <pre class="r"><code>dir(&quot;./UCI HAR Dataset/test&quot;)</code></pre>
 <pre><code>## [1] &quot;Inertial Signals&quot; &quot;subject_test.txt&quot; &quot;X_test.txt&quot;      
 ## [4] &quot;y_test.txt&quot;</code></pre>
@@ -654,7 +653,7 @@ str(averaged_by_activity)</code></pre>
 ##  $ Avg_fBodyBodyGyroJerkMag-std()    : num  -0.973 -0.984 -0.977 -0.514 -0.486 ...
 ##  $ Avg_fBodyBodyGyroJerkMag-Mean_Freq: num  0.0849 0.1777 0.1657 0.1308 0.0958 ...
 ##  - attr(*, &quot;.internal.selfref&quot;)=&lt;externalptr&gt;</code></pre>
-<pre class="r"><code>write.table(averaged_by_activity,&quot;./data/averaged_by_activity.txt&quot;)</code></pre>
+<pre class="r"><code>write.table(averaged_by_activity,&quot;./data/averaged_by_activity.txt&quot;, row.name=FALSE)</code></pre>
 </div>
 
 

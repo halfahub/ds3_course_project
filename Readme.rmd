@@ -20,6 +20,10 @@ if (!file.exists("./tmp")) {
   dir.create("./tmp")
 }
 
+if (!file.exists("./data")) {
+  dir.create("./data")
+}
+
 download.file(
 "https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip",
 destfile = "./tmp/dataset.zip"
@@ -139,7 +143,8 @@ Using the RegExp filter *features* dataset, containing features list
 mean_sd_cols <- grepl("std|mean", as.character(features$feature))
 ```
 
-Remember that features was augmented by activity in 1st column, so include one mo TRUE value for it in the resulting logical vector
+Remember that features was augmented by activity in 1st column, 
+so include one mo TRUE value for it in the resulting logical vector
 
 ```{r}
 mean_sd_cols <- c(TRUE, mean_sd_cols)
@@ -162,8 +167,6 @@ str(mean_sd_data$activity_factor)
 ```
 
 ### 4. From the data set in step 2, creating a second, independent tidy data set with the average of each variable for each activity and each subject.
-
-
 
 ```{r}
 averaged_by_activity <- mean_sd_data[,lapply(.SD,mean),by="activity_factor"]

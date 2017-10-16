@@ -21,12 +21,17 @@ if (file.exists("./UCI HAR Dataset")) {
 } else
   exit("Unable to unzip data.")
 
+## Creating output dir
+
+if (!file.exists("./data")) {
+  dir.create("./data")
+}
 
 ## 1. Merging the training and the test sets to create one data set.
 
 features <-
   fread(
-    "./UCI HAR Dataset/features.txt",
+    "./features.txt",
     sep = " ",
     header = FALSE,
     col.names = c("feature_id", "feature"),
@@ -36,7 +41,7 @@ features <-
 
 activity_labels <-
   fread(
-    "./UCI HAR Dataset/activity_labels.txt",
+    "./activity_labels.txt",
     col.names = c("activity_id", "activity_name"),
     stringsAsFactors = FALSE,
     encoding = "UTF-8"
@@ -45,12 +50,12 @@ activity_labels <-
 ### Load Training data
 
 x_train <-
-  fread("./UCI HAR Dataset/train/X_train.txt", col.names = features$feature)
+  fread("./train/X_train.txt", col.names = features$feature)
 
-activity_labels <- fread("./UCI HAR Dataset/activity_labels.txt")
+activity_labels <- fread("./activity_labels.txt")
 names(activity_labels) <- c("activity_id", "activity_name")
 
-y_train <- fread("./UCI HAR Dataset/train/y_train.txt")
+y_train <- fread("./train/y_train.txt")
 names(y_train)[1] <- "activity_id"
 
 
@@ -71,9 +76,9 @@ if (dim(x_train)[1] == dim(y_train)[1]) {
 ### Load Test data
 
 x_test <-
-  fread("./UCI HAR Dataset/test/X_test.txt", col.names = features$feature)
+  fread("./test/X_test.txt", col.names = features$feature)
 
-y_test <- fread("./UCI HAR Dataset/test/y_test.txt")
+y_test <- fread("./test/y_test.txt")
 names(y_test)[1] <- "activity_id"
 
 y_test$activity_factor <-
@@ -120,3 +125,5 @@ names(averaged_by_activity)[-1] <- paste("Avg", names(averaged_by_activity)[-1],
 names(averaged_by_activity)[1] <- "Activity"
 
 write.table(averaged_by_activity, "./data/averaged_by_activity.txt")
+
+setwd("..")

@@ -119,38 +119,64 @@ $(document).ready(function () {
 </div>
 
 
-<div id="getting-and-cleaning-data-course-project" class="section level2">
-<h2>Getting and Cleaning Data Course Project</h2>
-<p>The purpose of this project is to prepare tidy data that can be used for later analysis.</p>
-<div id="the-project-directiry-contains" class="section level3">
-<h3>The Project directiry contains:</h3>
+<div id="codebook" class="section level1">
+<h1>CodeBook</h1>
+<div id="prerequisites" class="section level2">
+<h2>Prerequisites</h2>
 <ul>
-<li>README.md – this description.</li>
-<li>run_analysis.R – data processing script.</li>
-<li>CodeBook.md – code book that describes the variables, the data, and transformations.</li>
-<li>averaged_by_activity.txt – tidi data set ready for further analysis.</li>
+<li>If you do not have <em>data.table</em> package it will be installed.</li>
 </ul>
 </div>
-</div>
-<div id="dataset" class="section level2">
-<h2>Dataset</h2>
-<p>The data for the project cuold be downloaded using following link: <a href="https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip">https://d396qusza40orc.cloudfront.net/getdata%2Fprojectfiles%2FUCI%20HAR%20Dataset.zip</a></p>
-<p>Provided script run_analysis.R includes data loading and extracting steps.</p>
-<div id="data-summary" class="section level3">
-<h3>Data summary</h3>
-<p>One of the most exciting areas in all of data science right now is wearable computing. Companies like Fitbit, Nike, and Jawbone Up are racing to develop the most advanced algorithms to attract new users. The data set represent data collected from the accelerometers from the Samsung Galaxy S smartphone.</p>
-<p>More details on the data set and the subject could be found here: <a href="http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones" class="uri">http://archive.ics.uci.edu/ml/datasets/Human+Activity+Recognition+Using+Smartphones</a></p>
-</div>
-<div id="data-processing-script-run_analysis.r-does-the-following" class="section level3">
-<h3>Data processing script run_analysis.R does the following:</h3>
+<div id="source-data" class="section level2">
+<h2>Source data</h2>
+<p>The data set splitted in two parts: train set and test set, each of them contains:</p>
 <ol style="list-style-type: decimal">
-<li>Merges the training and the test sets to create one data set.</li>
-<li>Extracts only the measurements on the mean and standard deviation for each measurement.</li>
-<li>Uses descriptive activity names to name the activities in the data set</li>
-<li>Appropriately labels the data set with descriptive variable names.</li>
-<li>From the data set in step 4, creates a second, independent tidy data set with the average of each variable for each activity and each subject.</li>
+<li>the measured data (X_train.txt and X_train.txt) - set of 561 parameter, labeled in file features.txt.</li>
+<li>the markers for activities (y_train.txt and y_train.txt) labeled in file activity_labels.txt.</li>
+<li>the markers for subjects (subject_train.txt and subject_test.txt).</li>
+<li>additional suplimentaly measurements (in “Internal Signals” subfolders) which will not be a part of this work.</li>
 </ol>
-<p>More details coud be found in the code book.</p>
+</div>
+<div id="processing-structures" class="section level2">
+<h2>Processing structures</h2>
+<p>Common parameters are stored in</p>
+<ul>
+<li>features – 561 x 2 data frame, containing integer <em>feature_id</em> and character <em>feature</em> name.</li>
+<li>activity_labels – 6 x 2 data frame, containing integer <em>activity_id</em> and character <em>activity_name</em>.</li>
+</ul>
+<p>Original training data set stores to</p>
+<ul>
+<li>x_train – original measures data frame as 7352 x 561 numeric matrix.</li>
+<li>y_train – 7352 x 2 dataframe, which column “activity_factor” contains 6-level factor of activities, labeled by activity names.</li>
+<li>train_subjects – 7352 x 1 dataframe, containing 21-levels factor of subjects.</li>
+</ul>
+<p>Tidy TRAINING data set is stored to</p>
+<ul>
+<li>train_data – 7352 x 563 data frame, which includes Activities and Subject factors.</li>
+</ul>
+<p>Original training data set stores to</p>
+<ul>
+<li>x_test – original measures data frame as 2947 x 561 numeric matrix.</li>
+<li>y_test – 2947 x 2 dataframe, which column “activity_factor” contains 6-level factor of activities, labeled by activity names.</li>
+<li>test_subjects – 2947 x 1 dataframe, containing 9-level factor of subjects.</li>
+</ul>
+<p>Tidy TEST data set is stored to</p>
+<ul>
+<li>test_data - tidy Training 2947 x 563 data frame, which includes Activities and Subject factors.</li>
+</ul>
+<p>Joined tidy data set</p>
+<ul>
+<li><strong>all_data</strong> – 10299 x 563 data frame obtained as result of merge <em>test_data</em> with <em>train_data</em>. ‘Subject’ column contains 30-levels factor of subjects. This structure is also stored in the file /data/all_data.txt for further analysis.</li>
+</ul>
+<p>Data frame, containing only <em>Mean</em> and <em>Standard deviation</em> of registered parameters for each measurement.</p>
+<ul>
+<li><strong>mean_sd_data</strong> – 10299 x 81 data frame, containing activvity, subject, and 79 features with presence of <em>Mean</em> and <em>Std</em> in their names. Stored in the file /data/mean_sd_data.txt for future use.</li>
+</ul>
+<p>Resulting data set</p>
+<p>Intependant data set with the average of each variable for each activity and each subject.</p>
+<ul>
+<li><strong>averaged_by_subjectactivity</strong> – 180 x 81 data set where <em>mean_sd_data</em> values averaged by 6 activities of 30 subjects. Note that names of columns are different from that of <em>mean_sd_data</em>, order the same.</li>
+</ul>
 </div>
 </div>
 

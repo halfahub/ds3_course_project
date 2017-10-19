@@ -1,23 +1,23 @@
-#' ---
-#' title: "Getting and Cleaning Data Course Project"
-#' output: html_document
-#' author: "Aleksandr Laburenko"
-#' date: "10/19/2017"
-#' ---
-#' 
-## ----setup, include=FALSE------------------------------------------------
+---
+title: "Getting and Cleaning Data Course Project"
+output: html_document
+author: "Aleksandr Laburenko"
+date: "10/19/2017"
+---
+
+```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 
 if (!require(data.table)) {
 install.packages("data.table")
 }
+```
 
-#' 
-#' ### Loading Data
-#' 
-#' Download and unpack files 
-#' 
-## ----data, cache = TRUE--------------------------------------------------
+### Loading Data
+
+Download and unpack files 
+
+```{r data, cache = TRUE}
 if (!file.exists("./tmp")) {
         dir.create("./tmp")
 }
@@ -34,20 +34,20 @@ if(!file.exists("./tmp/dataset.zip")) {
 }
 
 unzip("./tmp/dataset.zip", exdir = ".")
+```
 
-#' 
-#' Observing unpacked directories
-#' 
-## ----obs_data------------------------------------------------------------
+Observing unpacked directories
+
+```{r obs_data}
 dir("./UCI HAR Dataset")
 dir("./UCI HAR Dataset/test")
 dir("./UCI HAR Dataset/train")
+```
 
-#' 
-#' ### 1. Merging the training and the test sets to create one data set.
-#' 
-#' Observe datasets
-## ----features_and_labes--------------------------------------------------
+### 1. Merging the training and the test sets to create one data set.
+
+Observe datasets
+```{r features_and_labes}
 features <-
         fread(
         "./UCI HAR Dataset/features.txt",
@@ -70,10 +70,10 @@ activity_labels <-
 dim(activity_labels)
 str(activity_labels)
 
+```
 
-#' 
-#' Load and skim Train data
-## ----train_set-----------------------------------------------------------
+Load and skim Train data
+```{r train_set}
 x_train <-
         fread("./UCI HAR Dataset/train/X_train.txt", col.names = features$feature)
         dim(x_train)
@@ -85,10 +85,10 @@ y_train <-
 dim(y_train)
 str(y_train)
 
+```
 
-#' 
-#' Add Subjects dimension 
-## ----train_subjects------------------------------------------------------
+Add Subjects dimension 
+```{r train_subjects}
 train_subjects <-
         fread("./UCI HAR Dataset/train/subject_train.txt",
         col.names = c("subject"))
@@ -99,10 +99,10 @@ if (dim(x_train)[1] == dim(train_subjects)[1]) {
         train_data <- cbind(train_subjects, x_train)
         dim(train_data)
         }
+```
 
-#' 
-#' Add Activities dimension 
-## ----train_activity------------------------------------------------------
+Add Activities dimension 
+```{r train_activity}
 y_train$activity_factor <-
         factor(
                 y_train$activity_id,
@@ -115,11 +115,11 @@ if (dim(train_data)[1] == dim(y_train)[1]) {
         train_data <- cbind(y_train[, 2], train_data)
         dim(train_data)
         }
+```
 
-#' 
-#' 
-#' Load and observe Test data
-## ----test_set------------------------------------------------------------
+
+Load and observe Test data
+```{r test_set}
 x_test <-
   fread("./UCI HAR Dataset/test/X_test.txt", col.names = features$feature)
   dim(x_test)
@@ -151,11 +151,11 @@ if (dim(test_data)[1] == dim(y_test)[1]) {
         test_data <- cbind(y_test[, 2], test_data)
         dim(test_data)
 }
+```
 
-#' 
-#' Merge Training and Test datasets in one
-#' 
-## ----merged_set----------------------------------------------------------
+Merge Training and Test datasets in one
+
+```{r merged_set}
 if (dim(test_data)[2] == dim(train_data)[2]) {
         all_data <- rbind(train_data, test_data)
         all_data$subject <-factor(all_data$subject)
@@ -163,13 +163,13 @@ if (dim(test_data)[2] == dim(train_data)[2]) {
 } else stop("Udable to join training and test datasets")
 
 dim(all_data)
+```
 
-#' 
-#' ### 2. Extracting only the measurements on the mean and standard deviation for each measurement.
-#' 
-#' Using the RegExp filter *features* dataset, containing features list to find Mean and SD measurements
-#' 
-## ----mean_sd_columns-----------------------------------------------------
+### 2. Extracting only the measurements on the mean and standard deviation for each measurement.
+
+Using the RegExp filter *features* dataset, containing features list to find Mean and SD measurements
+
+```{r mean_sd_columns}
 mean_sd_cols <- grepl("std|mean", as.character(features$feature))
 mean_sd_cols <- c(TRUE, TRUE, mean_sd_cols)
 mean_sd_data <- all_data[, ..mean_sd_cols]
@@ -177,28 +177,28 @@ mean_sd_data <- all_data[, ..mean_sd_cols]
 dim(mean_sd_data)
 str(mean_sd_data)
 
+```
 
-#' 
-#' Remember that features was augmented by activity and subject in first two columns, 
-#' so include two TRUE values for them in the resulting logical vector
-#' 
-## ----save_mean_sd_columns------------------------------------------------
+Remember that features was augmented by activity and subject in first two columns, 
+so include two TRUE values for them in the resulting logical vector
+
+```{r save_mean_sd_columns}
 write.table(mean_sd_data,"./data/mean_sd_data.txt")
+```
 
-#' 
-#' ### 3. Setting descriptive activity names to name the activities in the data set.
-#' 
-#' This requirement is fulfilled on step 1, when Activities column is attached as a factor
-#' 
-## ----activity_factor-----------------------------------------------------
+### 3. Setting descriptive activity names to name the activities in the data set.
+
+This requirement is fulfilled on step 1, when Activities column is attached as a factor
+
+```{r activity_factor}
 class(mean_sd_data$activity_factor)
 table(mean_sd_data$activity_factor)
 str(mean_sd_data$activity_factor)
+```
 
-#' 
-#' ### 4. From the data set in step 2, creating a second, independent tidy data set with the average of each variable for each activity and each subject.
-#' 
-## ----tidy_averaged_by_subject--------------------------------------------
+### 4. From the data set in step 2, creating a second, independent tidy data set with the average of each variable for each activity and each subject.
+
+```{r tidy_averaged_by_subject}
 averaged_by_subjectactivity <- aggregate(. ~subject + activity_factor, mean_sd_data, mean)
 
 
@@ -213,4 +213,4 @@ dim(averaged_by_subjectactivity)
 str(averaged_by_subjectactivity)
 
 write.table(averaged_by_subjectactivity,"./data/averaged_by_subjectactivity.txt", row.name=FALSE)
-
+```

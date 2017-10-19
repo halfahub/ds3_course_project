@@ -206,7 +206,8 @@ names(averaged_by_subjectactivity) <- gsub("sd\\(\\)","SD", names(averaged_by_su
 names(averaged_by_subjectactivity) <- gsub("mean\\(\\)","Mean", names(averaged_by_subjectactivity))
 names(averaged_by_subjectactivity) <- gsub("meanFreq\\(\\)","Mean_Freq", names(averaged_by_subjectactivity))
 names(averaged_by_subjectactivity)[-1] <- paste("Avg", names(averaged_by_subjectactivity)[-1], sep = "_")
-names(averaged_by_subjectactivity)[1] <- "Activity"
+names(averaged_by_subjectactivity)[1] <- "Subject"
+names(averaged_by_subjectactivity)[2] <- "Activity"
 
 dim(averaged_by_subjectactivity) 
 

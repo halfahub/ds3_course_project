@@ -8,7 +8,7 @@ The purpose of this project is to prepare tidy data that can be used for later a
 * README.md -- this description.
 * run_analysis.R -- data processing script.
 * CodeBook.md -- code book that describes the variables, the data, and transformations.
-* averaged_by_activity.txt -- tidi data set ready for further analysis.
+* /data/averaged_by_subjectactivity.txt -- tidi data set ready for further analysis.
 
 
 ## Dataset
